@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Date Days Calculator - Calculate Days Between Two Dates</title>
+  <meta name="description" content="Calculate the exact number of days, weeks, months and years between two dates. Free online date difference and business days calculator.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#2563eb">
+
+  <!-- Basic security policy for this static calculator -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self';">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    .header {
+      background: #ffffff;
+      border-bottom: 1px solid #e7eaf0;
+      padding: 18px 20px;
+    }
+
+    .header-inner {
+      max-width: 1050px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 21px;
+      font-weight: 800;
+      color: #2563eb;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 55px 18px 30px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 6vw, 48px);
+      line-height: 1.1;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: #64748b;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: min(1050px, calc(100% - 30px));
+      margin: auto;
+    }
+
+    .calculator {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e8ecf2;
+    }
+
+    .date-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    input[type="date"] {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d8dee8;
+      border-radius: 11px;
+      font-size: 16px;
+      background: #fff;
+      color: #172033;
+      outline: none;
+    }
+
+    input[type="date"]:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .options {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .options input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .options label {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 11px;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .calculate {
+      flex: 1;
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .calculate:hover {
+      background: #1d4ed8;
+    }
+
+    .reset {
+      background: #eef2f7;
+      color: #334155;
+    }
+
+    .result {
+      display: none;
+      margin-top: 25px;
+      padding: 24px;
+      border-radius: 16px;
+      background: #f1f5ff;
+      border: 1px solid #dbe5ff;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result-main {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .result-number {
+      font-size: 42px;
+      font-weight: 800;
+      color: #2563eb;
+    }
+
+    .result-label {
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .breakdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .stat {
+      background: #fff;
+      border: 1px solid #e3e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 5px;
+    }
+
+    .stat span {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .error {
+      display: none;
+      margin-top: 15px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #fff1f2;
+      color: #be123c;
+      font-weight: 600;
+    }
+
+    .error.show {
+      display: block;
+    }
+
+    .info {
+      margin-top: 35px;
+      background: #fff;
+      border: 1px solid #e8ecf2;
+      border-radius: 18px;
+      padding: 25px;
+      line-height: 1.7;
+    }
+
+    .info h2 {
+      margin-top: 0;
+    }
+
+    .ad-slot {
+      min-height: 90px;
+      margin: 25px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    footer {
+      margin-top: 45px;
+      padding: 30px 18px;
+      background: #172033;
+      color: #cbd5e1;
+      text-align: center;
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    @media (max-width: 700px) {
+      .date-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .breakdown {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      .calculator {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">Date Days Calculator</div>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <h1>Days Between Dates Calculator</h1>
+      <p>
+        Calculate the exact number of days between two dates.
+        You can also calculate weeks, approximate months and years,
+        or exclude weekends with our business days calculator.
+      </p>
+    </section>
+
+    <div class="container">
+
+      <section class="calculator">
+
+        <div class="date-grid">
+
+          <div>
+            <label for="startDate">Start Date</label>
+            <input id="startDate" type="date" autocomplete="off">
+          </div>
+
+          <div>
+            <label for="endDate">End Date</label>
+            <input id="endDate" type="date" autocomplete="off">
+          </div>
+
+        </div>
+
+        <div class="options">
+          <input id="businessDays" type="checkbox">
+          <label for="businessDays">Calculate business days only (Monday–Friday)</label>
+        </div>
+
+        <div class="buttons">
+          <button class="calculate" id="calculateBtn" type="button">
+            Calculate
+          </button>
+
+          <button class="reset" id="resetBtn" type="button">
+            Reset
+          </button>
+        </div>
+
+        <div class="error" id="errorBox" role="alert"></div>
+
+        <div class="result" id="resultBox" aria-live="polite">
+
+          <div class="result-main">
+            <div class="result-number" id="daysResult">0</div>
+            <div class="result-label" id="daysLabel">Days</div>
+          </div>
+
+          <div class="breakdown">
+
+            <div class="stat">
+              <strong id="weeksResult">0</strong>
+              <span>Weeks</span>
+            </div>
+
+            <div class="stat">
+              <strong id="monthsResult">0</strong>
+              <span>Approx. Months</span>
+            </div>
+
+            <div class="stat">
+              <strong id="yearsResult">0</strong>
+              <span>Approx. Years</span>
+            </div>
+
+            <div class="stat">
+              <strong id="calendarResult">0</strong>
+              <span>Calendar Days</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <div class="ad-slot" aria-label="Advertisement">
+        Advertisement
+      </div>
+
+      <section class="info">
+        <h2>How to Calculate Days Between Two Dates</h2>
+
+        <p>
+          Enter a starting date and an ending date, then press Calculate.
+          The calculator will determine the number of days between the two dates.
+        </p>
+
+        <p>
+          If you select business days, Saturdays and Sundays will be excluded
+          from the calculation.
+        </p>
+
+        <h2>What Can This Calculator Calculate?</h2>
+
+        <p>
+          This tool can calculate the total number of calendar days,
+          weeks, approximate months, approximate years and business days
+          between two dates.
+        </p>
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer>
+    <div>© 2026 Date Days Calculator</div>
+    <div style="margin-top:10px;">
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="terms.html">Terms</a>
+    </div>
+  </footer>
+
+  <script>
+    "use strict";
+
+    const startDate = document.getElementById("startDate");
+    const endDate = document.getElementById("endDate");
+    const businessDays = document.getElementById("businessDays");
+
+    const calculateBtn = document.getElementById("calculateBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const resultBox = document.getElementById("resultBox");
+    const errorBox = document.getElementById("errorBox");
+
+    const daysResult = document.getElementById("daysResult");
+    const daysLabel = document.getElementById("daysLabel");
+    const weeksResult = document.getElementById("weeksResult");
+    const monthsResult = document.getElementById("monthsResult");
+    const yearsResult = document.getElementById("yearsResult");
+    const calendarResult = document.getElementById("calendarResult");
+
+    function parseDate(value) {
+      if (!value || !/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) {
+        return null;
+      }
+
+      const parts = value.split("-").map(Number);
+      const date = new Date(parts[0], parts[1] - 1, parts[2]);
+
+      if (
+        date.getFullYear() !== parts[0] ||
+        date.getMonth() !== parts[1] - 1 ||
+        date.getDate() !== parts[2]
+      ) {
+        return null;
+      }
+
+      return date;
+    }
+
+    function showError(message) {
+      errorBox.textContent = message;
+      errorBox.classList.add("show");
+      resultBox.classList.remove("show");
+    }
+
+    function clearError() {
+      errorBox.textContent = "";
+      errorBox.classList.remove("show");
+    }
+
+    function calculateBusinessDays(start, end) {
+      let count = 0;
+      const current = new Date(start);
+
+      while (current < end) {
+        const day = current.getDay();
+
+        if (day !== 0 && day !== 6) {
+          count++;
+        }
+
+        current.setDate(current.getDate() + 1);
+      }
+
+      return count;
+    }
+
+    function calculate() {
+      clearError();
+
+      const start = parseDate(startDate.value);
+      const end = parseDate(endDate.value);
+
+      if (!start || !end) {
+        showError("Please select both dates.");
+        return;
+      }
+
+      if (start > end) {
+        showError("Start date cannot be later than the end date.");
+        return;
+      }
+
+      const millisecondsPerDay = 86400000;
+
+      const calendarDays = Math.round(
+        (end.getTime() - start.getTime()) / millisecondsPerDay
+      );
+
+      const selectedDays = businessDays.checked
+        ? calculateBusinessDays(start, end)
+        : calendarDays;
+
+      daysResult.textContent = selectedDays.toLocaleString();
+      daysLabel.textContent = businessDays.checked
+        ? "Business Days"
+        : "Days";
+
+      weeksResult.textContent =
+        (selectedDays / 7).toFixed(2);
+
+      monthsResult.textContent =
+        (selectedDays / 30.4375).toFixed(2);
+
+      yearsResult.textContent =
+        (selectedDays / 365.2425).toFixed(2);
+
+      calendarResult.textContent =
+        calendarDays.toLocaleString();
+
+      resultBox.classList.add("show");
+    }
+
+    function resetCalculator() {
+      startDate.value = "";
+      endDate.value = "";
+      businessDays.checked = false;
+
+      clearError();
+
+      resultBox.classList.remove("show");
+
+      daysResult.textContent = "0";
+      weeksResult.textContent = "0";
+      monthsResult.textContent = "0";
+      yearsResult.textContent = "0";
+      calendarResult.textContent = "0";
+      daysLabel.textContent = "Days";
+    }
+
+    calculateBtn.addEventListener("click", calculate);
+    resetBtn.addEventListener("click", resetCalculator);
+  </script>
+
+</body>
+    </html>
