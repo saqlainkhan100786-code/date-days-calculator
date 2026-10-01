@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#0f172a">
 
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self';">
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self';">
 
   <style>
     * {
@@ -394,12 +394,14 @@
 
       <div class="options">
         <input id="businessDays" type="checkbox">
+
         <label for="businessDays">
           Exclude weekends and calculate business days only
         </label>
       </div>
 
       <div class="actions">
+
         <button id="calculateBtn" type="button">
           Calculate Difference
         </button>
@@ -407,6 +409,7 @@
         <button id="resetBtn" type="button">
           Reset
         </button>
+
       </div>
 
       <div id="errorBox" class="error" role="alert"></div>
@@ -446,7 +449,7 @@
 
     </section>
 
-    <!-- AD SLOT 1: Below calculator, not inside the input/action area -->
+    <!-- AD SLOT 1 -->
     <div class="ad-slot">
       Advertisement
     </div>
@@ -468,7 +471,7 @@
 
     </section>
 
-    <!-- AD SLOT 2: Between content sections -->
+    <!-- AD SLOT 2 -->
     <div class="ad-slot">
       Advertisement
     </div>
@@ -496,12 +499,14 @@
 </main>
 
 <footer>
+
   <div>© 2026 Date Days Calculator</div>
 
   <div style="margin-top:10px;">
     <a href="privacy-policy.html">Privacy Policy</a>
     <a href="terms.html">Terms</a>
   </div>
+
 </footer>
 
 <script>
@@ -527,23 +532,29 @@
   const yearsResult = document.getElementById("yearsResult");
   const calendarResult = document.getElementById("calendarResult");
 
+
   function parseDate(value) {
-    if (!value || !/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) {
+
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       return null;
     }
 
     const parts = value.split("-").map(Number);
 
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+
     const date = new Date(
-      parts[0],
-      parts[1] - 1,
-      parts[2]
+      year,
+      month - 1,
+      day
     );
 
     if (
-      date.getFullYear() !== parts[0] ||
-      date.getMonth() !== parts[1] - 1 ||
-      date.getDate() !== parts[2]
+      date.getFullYear() !== year ||
+      date.getMonth() !== month - 1 ||
+      date.getDate() !== day
     ) {
       return null;
     }
@@ -553,20 +564,29 @@
     return date;
   }
 
+
   function showError(message) {
+
     errorBox.textContent = message;
+
     errorBox.classList.add("show");
+
     resultBox.classList.remove("show");
   }
 
+
   function clearError() {
+
     errorBox.textContent = "";
+
     errorBox.classList.remove("show");
   }
+
 
   function getBusinessDays(start, end) {
 
     let count = 0;
+
     const current = new Date(start);
 
     while (current < end) {
@@ -583,6 +603,7 @@
     return count;
   }
 
+
   function calculate() {
 
     clearError();
@@ -590,51 +611,73 @@
     const start = parseDate(startDate.value);
     const end = parseDate(endDate.value);
 
+
     if (!start || !end) {
+
       showError("Please select both dates.");
+
       return;
     }
+
 
     if (start > end) {
+
       showError("Start date cannot be later than the end date.");
+
       return;
     }
 
-    const millisecondsPerDay = 86400000;
+
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+
 
     const calendarDays = Math.round(
-      (end.getTime() - start.getTime()) / millisecondsPerDay
+      (end.getTime() - start.getTime()) /
+      millisecondsPerDay
     );
+
 
     const totalDays = businessDays.checked
       ? getBusinessDays(start, end)
       : calendarDays;
 
-    daysResult.textContent = totalDays.toLocaleString();
 
-    daysLabel.textContent = businessDays.checked
-      ? "Business Days"
-      : "Calendar Days";
+    daysResult.textContent =
+      totalDays.toLocaleString();
+
+
+    daysLabel.textContent =
+      businessDays.checked
+        ? "Business Days"
+        : "Calendar Days";
+
 
     weeksResult.textContent =
       (totalDays / 7).toFixed(2);
 
+
     monthsResult.textContent =
       (totalDays / 30.4375).toFixed(2);
+
 
     yearsResult.textContent =
       (totalDays / 365.2425).toFixed(2);
 
+
     calendarResult.textContent =
       calendarDays.toLocaleString();
+
 
     resultBox.classList.add("show");
   }
 
+
   function resetCalculator() {
 
     startDate.value = "";
+
     endDate.value = "";
+
     businessDays.checked = false;
 
     clearError();
@@ -642,15 +685,30 @@
     resultBox.classList.remove("show");
 
     daysResult.textContent = "0";
+
     daysLabel.textContent = "Days";
+
     weeksResult.textContent = "0";
+
     monthsResult.textContent = "0";
+
     yearsResult.textContent = "0";
+
     calendarResult.textContent = "0";
   }
 
-  calculateBtn.addEventListener("click", calculate);
-  resetBtn.addEventListener("click", resetCalculator);
+
+  calculateBtn.addEventListener(
+    "click",
+    calculate
+  );
+
+
+  resetBtn.addEventListener(
+    "click",
+    resetCalculator
+  );
+
 
 })();
 </script>
